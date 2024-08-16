@@ -33,6 +33,33 @@ def draw_resources():
         window.blit(text, (10, y_offset))
         y_offset += 40
 
+# Structure list
+structures = []
+
+# Function to draw structures
+def draw_structures():
+    for structure in structures:
+        pygame.draw.rect(window, GREEN, structure)
+
+# Function to add a structure
+def add_structure(x, y):
+    if resources["wood"] >= 50 and resources["stone"] >= 30:
+        structures.append(pygame.Rect(x, y, 50, 50))
+        resources["wood"] -= 50
+        resources["stone"] -= 30
+
+import random
+
+# Function to trigger a natural disaster
+def trigger_disaster():
+    if random.random() < 0.1:  # 10% chance each tick
+        if structures:
+            destroyed = random.choice(structures)
+            structures.remove(destroyed)
+            resources["wood"] -= 20
+            resources["stone"] -= 20
+            print("A disaster occurred! A structure was destroyed.")
+
 # Game loop
 def game_loop():
     running = True
@@ -40,17 +67,21 @@ def game_loop():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                add_structure(x, y)
 
         # Clear the screen
         window.fill(WHITE)
 
+        # Trigger random events
+        trigger_disaster()
+
         # Draw resources
         draw_resources()
 
-        # Draw UI elements (placeholder)
-        pygame.draw.rect(window, GRAY, (50, 50, 200, 100))
-        text = font.render("City Builder", True, BLACK)
-        window.blit(text, (60, 80))
+        # Draw structures
+        draw_structures()
 
         # Update the display
         pygame.display.flip()
