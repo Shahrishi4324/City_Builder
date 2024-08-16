@@ -60,6 +60,24 @@ def trigger_disaster():
             resources["stone"] -= 20
             print("A disaster occurred! A structure was destroyed.")
 
+# Population count
+population = 10
+food_consumption_rate = 1  # Amount of food consumed per tick
+
+# Function to manage population growth
+def manage_population():
+    global population
+    if resources["food"] >= food_consumption_rate * population:
+        resources["food"] -= food_consumption_rate * population
+        population += 1
+    else:
+        population -= 1  # Population decreases if there's not enough food
+
+# Function to draw population count
+def draw_population():
+    text = font.render(f"Population: {population}", True, BLACK)
+    window.blit(text, (10, HEIGHT - 40))
+
 # Game loop
 def game_loop():
     running = True
@@ -74,11 +92,17 @@ def game_loop():
         # Clear the screen
         window.fill(WHITE)
 
+        # Manage population
+        manage_population()
+
         # Trigger random events
         trigger_disaster()
 
         # Draw resources
         draw_resources()
+
+        # Draw population count
+        draw_population()
 
         # Draw structures
         draw_structures()
