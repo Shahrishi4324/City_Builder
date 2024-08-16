@@ -78,8 +78,23 @@ def draw_population():
     text = font.render(f"Population: {population}", True, BLACK)
     window.blit(text, (10, HEIGHT - 40))
 
+# Win/Lose condition variables
+max_population = 50
+min_population = 0
+
+# Function to check win/lose conditions
+def check_game_over():
+    global running
+    if population >= max_population:
+        print("You win! Your city has thrived.")
+        running = False
+    elif population <= min_population:
+        print("You lose! Your city has perished.")
+        running = False
+
 # Game loop
 def game_loop():
+    global running
     running = True
     while running:
         for event in pygame.event.get():
@@ -94,6 +109,9 @@ def game_loop():
 
         # Manage population
         manage_population()
+
+        # Check win/lose conditions
+        check_game_over()
 
         # Trigger random events
         trigger_disaster()
